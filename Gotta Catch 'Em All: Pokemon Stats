@@ -821,15 +821,15 @@ SELECT type_1 AS "Type_of_Species", COUNT(name) AS Pokemon_Count FROM pokemon GR
 SELECT AVG(Speed) FROM pokemon;
 SELECT AVG(HP) FROM pokemon;
 
-SELECT Name AS "Pokemon", Type_1 AS "Pokemon_Species", HP AS "Above_AVG_HP", Speed AS "Above_AVG_Speed" FROM pokemon GROUP BY "Above_AVG_Speed" HAVING Speed > 69;
+SELECT Name AS Pokemon, Type_1 AS Pokemon_Species, HP AS Above_AVG_HP, Speed AS Above_AVG_Speed FROM pokemon GROUP BY Above_AVG_Speed HAVING Speed > 69 LIMIT 50;
 
-SELECT Name, Speed,
+SELECT Name AS Pokemon, Speed,
     CASE
         WHEN Speed = 68 THEN "Average"
         WHEN Speed > 68 THEN "Above Average"
         WHEN Speed < 68 THEN "Below Average"
         ELSE "N/A"
-    END AS "Speed_Quality" FROM pokemon ORDER BY Speed;
+    END AS "Speed_Quality" FROM pokemon LIMIT 50; 
 
 SELECT AVG(Attack) AS Average_Pokemon_Attack_Score FROM pokemon;
 
@@ -837,15 +837,15 @@ SELECT COUNT(Attack) AS Pokemon_Attack_Above_Average FROM pokemon Where Attack >
 
 SELECT AVG(Attack) AS Average_Attack_Score, Type_1 AS Pokemon_Type FROM pokemon Group by Type_1;
 
-SELECT Name, Type_1 AS Pokemon_Type, Attack AS Above_Average_Attack FROM pokemon Where Attack > 79 ORDER BY Attack;
+SELECT Name AS Top_20_Pokemon, Type_1 AS Pokemon_Type, Attack AS Above_Average_Attack FROM pokemon Where Attack > 79 ORDER BY Attack DESC LIMIT 20;
 
-SELECT Name, Attack,
+SELECT Name AS Pokemon, Attack,
     CASE
         WHEN Attack = 79 THEN "Average"
         WHEN Attack > 79 THEN "Above Average"
         WHEN Attack < 79 THEN "Below Average"
         ELSE "N/A"
-    END AS "Attack_Quality" FROM pokemon ORDER BY Attack;
+    END AS "Attack_Quality" FROM pokemon LIMIT 50;
     
 SELECT AVG(Defense) AS Average_Pokemon_Defense_Score FROM pokemon; 
 
@@ -853,14 +853,14 @@ SELECT COUNT(Defense) AS Pokemon_Defense_Above_Average FROM pokemon Where Defens
 
 SELECT AVG(Defense) AS Average_Pokemon_Defense_Score, Type_1 AS Pokemon_Type FROM pokemon GROUP BY Type_1; 
 
-SELECT Name, Type_1 AS Pokemon_Type, Defense AS Above_Average_Defense FROM pokemon Where Defense > 73 ORDER BY Defense;
+SELECT Name AS Pokemon, Type_1 AS Pokemon_Type, Defense AS Above_Average_Defense FROM pokemon Where Defense > 73 ORDER BY Defense DESC LIMIT 50;
 
-SELECT Name, Defense,
+SELECT Name AS Pokemon, Defense,
     CASE
         WHEN Defense = 73 THEN "Average"
         WHEN Defense > 73 THEN "Above Average"
         WHEN Defense < 73 THEN "Below Average"
         ELSE "N/A"
-    END AS "Defense_Quality" FROM pokemon ORDER BY Defense;
+    END AS "Defense_Quality" FROM pokemon LIMIT 50;
     
-SELECT Name AS Above_Average_Pokemon, Type_1 AS Pokemon_Type, Attack, Defense FROM pokemon Where Defense > 73 ORDER BY Defense AND Attack > 79;
+SELECT Name AS Top_20_Above_Average_Pokemon, Type_1 AS Pokemon_Type, Attack, Defense FROM pokemon Where Defense > 73 ORDER BY Defense AND Attack > 79 LIMIT 20;
