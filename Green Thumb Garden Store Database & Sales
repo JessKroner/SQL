@@ -1,0 +1,23 @@
+CREATE TABLE garden_store (id INTEGER PRIMARY KEY, plant_name TEXT, price NUMERIC, quantity_sold INTEGER, profits NUMERIC);
+INSERT INTO garden_store VALUES (1, "Snake", 15, 5, 75);
+INSERT INTO garden_store VALUES (2, "Pothos", 9, 12, 108);
+INSERT INTO garden_store VALUES (3, "ZZ", 10, 7, 70);
+INSERT INTO garden_store VALUES (4, "Aloe Vera", 15, 18, 270);
+INSERT INTO garden_store VALUES (5, "Peace Lily", 23, 4, 92);
+INSERT INTO garden_store VALUES (6, "Bird’s Nest Fern", 22, 4, 88);
+INSERT INTO garden_store VALUES (7, "Dracaena", 17, 3, 51);
+INSERT INTO garden_store VALUES (8, "Spider Plant", 18, 7, 126);
+INSERT INTO garden_store VALUES (9, "Fiddle Leaf Fig", 27, 29, 783);
+INSERT INTO garden_store VALUES (10, "Pilea Peperomioides", 23, 4, 92);
+INSERT INTO garden_store VALUES (11, "Jade Plant", 15, 15, 225);
+INSERT INTO garden_store VALUES (12, "African Violet", 23, 7, 161);
+INSERT INTO garden_store VALUES (13, "Guiana Chestnut", 30, 9, 270);
+INSERT INTO garden_store VALUES (14, "Yucca", 47, 8, 376);
+INSERT INTO garden_store VALUES (15, "Peperomia", 20, 12, 34);
+INSERT INTO garden_store VALUES (16, "Burro’s-Tail", 15, 7, 105);
+INSERT INTO garden_store VALUES (17, "Parlor Palm", 50, 3, 150);
+
+SELECT SUM(quantity_sold) AS Total_Plants_Sold, SUM(profits) AS Total_Gross_Profit FROM garden_store;
+SELECT plant_name, price FROM garden_store ORDER BY plant_name;
+SELECT plant_name, quantity_sold, profits AS Total_Profits FROM garden_store ORDER BY plant_name;
+SELECT * FROM garden_store WHERE profits > 100 ORDER BY profits DESC;
