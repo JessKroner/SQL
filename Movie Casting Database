@@ -1,3 +1,7 @@
+#This SQL code contains two data bases I've written about movies & movie stars.
+##Data Sources: Rottentomatoes.com and IMDB.com
+
+#1. Create table of movies and insert movie data: 
 CREATE TABLE Movies (id INTEGER PRIMARY KEY AUTOINCREMENT, Title TEXT, Yr_of_Release INTEGER, Genre TEXT, Rotten_Tomatoes_Audience_Percentage_Rating INTEGER, Star INTEGER, Co_Star INTEGER, Co_Star2 INTEGER); 
 
 INSERT INTO Movies (Title, Yr_of_Release, Genre, Rotten_Tomatoes_Audience_Percentage_Rating, Star, Co_star, Co_Star2) VALUES ("Flatliners", "1990", "Horror/Sci-Fi", "59", "3", "4","");
@@ -22,6 +26,7 @@ INSERT INTO Movies (Title, Yr_of_Release, Genre, Rotten_Tomatoes_Audience_Percen
 INSERT INTO Movies (Title, Yr_of_Release, Genre, Rotten_Tomatoes_Audience_Percentage_Rating, Star, Co_star, Co_Star2) VALUES ("Glory", "1989", "Drama/History", "93", "9", "16","");
 INSERT INTO Movies (Title, Yr_of_Release, Genre, Rotten_Tomatoes_Audience_Percentage_Rating, Star, Co_star, Co_Star2) VALUES ("Out Of Sight", "1998", "Drama/Crime", "74", "15", "14","");
 
+#2. Create table of cast from the movies in the table "Movies":
 CREATE TABLE Actors (id INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, Birth_Year INTEGER, Born_In TEXT, Movie1 INTEGER, Movie2 INTEGER,  Movie3 INTEGER);
 
 INSERT INTO Actors (Name, Birth_Year, Born_In, Movie1, Movie2, Movie3) VALUES ("Tom Hanks", "1965", "Concord, CA", "2", "3", "15");
@@ -41,9 +46,13 @@ INSERT INTO Actors (Name, Birth_Year, Born_In, Movie1, Movie2, Movie3) VALUES ("
 INSERT INTO Actors (Name, Birth_Year, Born_In, Movie1, Movie2, Movie3) VALUES ("Jennifer Lopez", "1969", "New York, NY", "17", "21", "");
 INSERT INTO Actors (Name, Birth_Year, Born_In, Movie1, Movie2, Movie3) VALUES ("Denzel Washington", "1954", "Mount Vernon, NY", "18", "19", "20");
 
+#3. Query Movies table with rottten tomatoes scores: 
 SELECT id, Title, Yr_of_Release, Genre, Rotten_Tomatoes_Audience_Percentage_Rating FROM Movies ORDER BY Rotten_Tomatoes_Audience_Percentage_Rating DESC;
+
+#4. Query Actors table: 
 SELECT id, Name, (2022-birth_year) AS Age, Born_In AS "From" FROM Actors;
 
+#5. Join the tables and query which actors are in each of the movies: 
 SELECT movies.Title, movies.Yr_of_Release AS Year, movies.Genre, A.Name AS Casting, B.Name AS Casting, C.Name AS Casting FROM Movies
     LEFT OUTER JOIN Actors A
         ON movies.star = a.id
@@ -53,6 +62,7 @@ SELECT movies.Title, movies.Yr_of_Release AS Year, movies.Genre, A.Name AS Casti
         On movies.co_star2 = c.id
     ORDER BY Year;
 
+#6. Query the Actors table and identify what movies they are in from the Movie table: 
 SELECT actors.Name AS Actor_Name, a.Yr_of_Release AS Year, a.Title AS Movie, b.Yr_of_Release AS Year, b.Title, c.Yr_of_Release AS Year, c.Title AS Movie FROM Actors
     LEFT OUTER JOIN Movies a
         ON actors.Movie1 = a.id
@@ -61,5 +71,6 @@ SELECT actors.Name AS Actor_Name, a.Yr_of_Release AS Year, a.Title AS Movie, b.Y
     LEFT OUTER JOIN Movies c
         ON actors.Movie3 = c.id
     ORDER BY Actors.Name;
-    
+
+#7: Compile list of movies containing rotten tomatoes score higher than 70:     
 SELECT Title AS Movie, Genre, Rotten_Tomatoes_Audience_Percentage_Rating AS Audience_Rating_Above_70 FROM Movies WHERE Rotten_Tomatoes_Audience_Percentage_Rating > 70;
