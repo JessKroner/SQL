@@ -1,4 +1,4 @@
-#This SQL code contains two data bases I've written about movies & movie stars.
+#This SQL code contains two databases I've created about movies & movie stars.
 ##Data Sources: Rottentomatoes.com and IMDB.com
 
 #1. Create table of movies and insert movie data: 
