@@ -1,0 +1,15 @@
+#In this SQL I'm quering a database of the Top 50 songs of 2021 in Spotify to answer questions about the data. 
+#Source: Kaggle.com
+
+#1. Query a list of the top 20 songs and all of their data: 
+SELECT * FROM BIT_DB.Spotifydata;
+
+#2. What is the title and artist of the top song in 2021? 
+SELECT artist_name, track_name 
+FROM BIT_DB.Spotifydata WHERE id is '1';
+
+#3. List all of the song on the top 50 list by the artist with the #1 song:
+SELECT artist_name, track_name 
+FROM BIT_Db.Spotifydata 
+WHERE artist_name is 'Olivia Rodrigo'; 
+
