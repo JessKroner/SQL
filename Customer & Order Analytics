@@ -4,7 +4,6 @@
 SELECT COUNT(orderID) AS Total_Number_of_Jan_Sales FROM BIT_DB.JanSales;
 
 #2. How many of those orders were for an iPhone? 
-
 SELECT product, COUNT(product) AS Total_Units_Sold 
 FROM BIT_DB.JanSales WHERE product = "iPhone";
 
