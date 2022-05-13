@@ -1,4 +1,9 @@
+# In this SQL code I've created a database for the Green Thumb Garden Store and queried sales information.  
+
+#1. Create garden store database: 
 CREATE TABLE garden_store (id INTEGER PRIMARY KEY, plant_name TEXT, price NUMERIC, quantity_sold INTEGER, profits NUMERIC);
+
+#2. Insert garden store inventory information: 
 INSERT INTO garden_store VALUES (1, "Snake", 15, 5, 75);
 INSERT INTO garden_store VALUES (2, "Pothos", 9, 12, 108);
 INSERT INTO garden_store VALUES (3, "ZZ", 10, 7, 70);
@@ -17,7 +22,14 @@ INSERT INTO garden_store VALUES (15, "Peperomia", 20, 12, 34);
 INSERT INTO garden_store VALUES (16, "Burro’s-Tail", 15, 7, 105);
 INSERT INTO garden_store VALUES (17, "Parlor Palm", 50, 3, 150);
 
+#3. Query number of plants sold and total profits: 
 SELECT SUM(quantity_sold) AS Total_Plants_Sold, SUM(profits) AS Total_Gross_Profit FROM garden_store;
+
+#4. Query list of plants and their prices:  
 SELECT plant_name, price FROM garden_store ORDER BY plant_name;
+
+#5. Identify the number sold and total profits of each plant within inventory: 
 SELECT plant_name, quantity_sold, profits AS Total_Profits FROM garden_store ORDER BY plant_name;
-SELECT * FROM garden_store WHERE profits > 100 ORDER BY profits DESC;
+
+#6. What top 10 plants brought in sales over $100? 
+SELECT * FROM garden_store WHERE profits > 100 ORDER BY profits DESC LIMIT 10;
