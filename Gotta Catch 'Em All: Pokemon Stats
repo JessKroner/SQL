@@ -1,4 +1,5 @@
-#In this SQL code, I'm quering a database of pokemon and their stats to answer questions about pokemon.  
+#In this SQL code, I'm quering a database of pokemon and their stats to answer questions about pokemon. 
+#Database sourced from Github.Gist
 
 #1. How many pokemon are in the database? 
 SELECT COUNT(*) AS Pokemon_Count FROM pokemon;
