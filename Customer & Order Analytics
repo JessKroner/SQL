@@ -15,11 +15,13 @@ JOIN BIT_DB.FebSales
 ON customers.acctnum = FebSales.orderID;
 
 #4. Which product was the cheapest one sold in January, and what was the price?
-SELECT DISTINCT product, price FROM BIT_DB.JanSales
+SELECT DISTINCT product, price 
+FROM BIT_DB.JanSales
 WHERE price IN (SELECT min(price) FROM BIT_DB.JanSales);
 
 #5. What is the total revenue for each product sold in January? 
-SELECT product, SUM(Quantity)*price AS Revnue FROM BIT_DB.JanSales GROUP BY product;
+SELECT product, SUM(Quantity)*price AS Revnue 
+FROM BIT_DB.JanSales GROUP BY product;
 
 #6. Which products were sold in February at 548 Lincoln St, Seattle, WA 98101, how many of each were sold, and what was the total revenue?
 SELECT product, SUM(quantity) AS Total_Units_Sold, SUM(quantity)*price AS Total_Revenue 
@@ -32,3 +34,29 @@ FROM BIT_DB.FebSales Feb
 LEFT JOIN customers 
 ON Feb.orderID = customers.order_id
 WHERE feb.quantity>2;
+
+#8. Query dates between 2/13/19 and 2/18/19:
+SELECT orderdate
+FROM BIT_DB.FebSales
+WHERE orderdate between '02/13/19 00:00' AND '02/18/19 00:00';
+
+#9. Where  was the order that was placed on 2/18/19 01:35? 
+SELECT location
+FROM BIT_DB.FebSales
+WHERE orderdate = '02/18/19 01:35';
+
+#10. How many products were ordered on 2/18/19?
+SELECT sum(quantity)
+FROM BIT_DB.FebSales 
+WHERE orderdate like '02/18/19%';
+
+#11: How many of each product were sold at the Los Angeles loation? 
+SELECCT products, quantity 
+FROM BIT_DB.FEBSales 
+WHERE location LIKE '%los Angeles%';
+
+#12. List all the products and how many of each were sold in Los Angeles during February:
+SELECT product, SUM(quantity) AS Units_Sold 
+FROM BIT_DB.FebSales 
+WHERE location LIKE '%los Angeles%' 
+GROUP BY product;
