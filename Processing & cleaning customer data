@@ -1,0 +1,56 @@
+## Here I have added a dataset to BigQuery & created a table from customer information stored in a CSV file and written the below SQL to process and clean the data.
+
+##1. Reviewing customer_id information 
+  #Returns duplicate entries for customer_id
+SELECT
+  customer_id
+FROM `poetic-pottery-351322.customerData.customer_address`;
+
+##2. Removing duplicates for accurate review of customer_id 
+SELECT
+  DISTINCT customer_id
+FROM
+`poetic-pottery-351322.customerData.customer_address`;
+
+##3. Confirming the data length of country data is consistent (length should = 2)
+  #some country data fields contain length > 2
+SELECT
+  LENGTH(country) AS letters_in_country
+FROM
+  `poetic-pottery-351322.customerData.customer_address`;
+
+##4. Identify what country data contains length > 2
+  #Results yield country 'USA', which should be 'US'
+SELECT 
+  country
+FROM
+  `poetic-pottery-351322.customerData.customer_address`
+WHERE
+  LENGTH(country) > 2;
+
+##5. Reviewing customer_id data where the country data first two letters = 'US'
+  #Returns customers in 'US' and 'USA'
+SELECT 
+ DISTINCT customer_id
+FROM 
+  `poetic-pottery-351322.customerData.customer_address`
+WHERE 
+  SUBSTR(country,1,2) = 'US';
+
+##6. Confirm state column has consistent number of letters
+  #Returns one state (OH ) has length > 2
+SELECT
+  state
+FROM
+  `poetic-pottery-351322.customerData.customer_address`
+WHERE
+  LENGTH(state) > 2;
+
+##7. Query list of all customer_id that life in 'OH'
+  #Returns all customer_id data where the state is 'OH'
+SELECT 
+  DISTINCT customer_id
+FROM
+  `poetic-pottery-351322.customerData.customer_address`
+WHERE 
+  TRIM(state) = 'OH'
