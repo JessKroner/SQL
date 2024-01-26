@@ -1,0 +1,183 @@
+--Launched in Q1 2023, the “State Exam Eligibility” email campaign transformed a new brand’s 1-star Google rating to 4.6 stars by Q1 2024. 
+--Targeting program completers eligible for their state licensing exam, the campaign used personalized congratulations, gift cards, 
+--and review incentives to generate positive feedback on the brand website, Google, and through video testimonials. 
+--This success not only boosted brand perception but also projected revenue growth and led to the campaign’s expansion to two additional brands. 
+
+--Query#1
+--Query students who have completed their required courses to sit for state license exams and produe a row number to obtain a count of completed courses per student.
+
+;with main as(
+  select 
+    	s.student_id 
+	    ,s.first_name 
+	    ,s.last_name 
+	    ,s.email_address 
+	    ,s.zipcode 
+            ,cast(se.enrollment_date_ts as date) enrollment_date
+	    ,cast(se.completion_date_ts as date) completion_date
+	    ,scr.state_abbv 
+	    ,scr.license_type_id 
+	    ,s.subsidiary_id 
+	    ,s2.subsidiary_description 
+	    ,se.course_id 
+	    ,c.course_name 
+	    ,se.course_status 
+	    ,sci.approval_number  
+	    ,case when sci.approval_number in (
+      '008', '4500-20', '4508-20', '4507-20', 
+      '803.002050', '803.002052', 'P20000', 
+      'P20008', '0030858', '0030870', '0030872', 
+      '0200020008', '0200020007', 'CR000808', 
+      'CR000800', '020035', '020040', '0204025008'
+    ) 
+    or se.course_id in (
+      '48835', '70385', '82724', '82533', 
+      '75500', '70080', '82373', '82807', 
+      '82720', '82540', '77780', '78880', 
+      '82378', '82808', '70080', '70082'
+    ) 
+    or c.course_name like '%75-hour MO Prelicense Course%' 
+    then 0 else 0 end as livestream_flag 
+  from 
+    svr.db.student s 
+    inner join svr.db.student_enrollment se on s.student_id = se.student_id 
+    left join svr.db.student_credit_requested scr on se.enrollment_id = scr.enrollment_id 
+    left join svr.db.student_certificates_issued sci on scr.credit_requested_id = sci.credit_requested_id 
+    inner join svr.db.lkp_license_type llt on scr.license_type_id = llt.license_type_id 
+    inner join svr.db.course c on se.course_id = c.course_id 
+    inner join svr.db.course_type ct on c.course_type_id = ct.course_type_id 
+    inner join svr.db.subsidiaries s2 on s.subsidiary_id = s2.subsidiary_internal_id 
+  where (
+      sci.approval_number in (
+        '07070', '000', '008', 'PR00000388', 
+        'A2780', '0000235', '27520', '74773', 
+        'P43822', '078-000-SPL', 'M0000R', 
+        '803.000824', '803.000808', '803.002050', 
+        '803.002052', 'SC40500004', 'P20324', 
+        'P07877', 'P20000', 'P20008', '20058', 
+        '3040', '0022024', '0022028', '0022025', 
+        '0030858', '0030870', '0030872', 
+        '0200005002', '0200002054', '0200020008', 
+        '0200020007', 'Pre-020', '08-02', 
+        '0040', '0047R', '0003', 'PL.0000088-RE', 
+        'PL.3000088-RE', 'F00020', 'BAS000', 
+        'CR005785', 'CR005788', 'CR000808', 
+        'CR000800', 'DPL054000', '8030', 
+        '5035', '020035', '020 040', '020', 
+        '022', '0080', '0280', '480', '380', 
+        '0204024070', '0204025008', 'CA-5250', 
+        'C22000705', 'C20024838', 'C20030044', 
+        'C20030040', '4500-20', '4508-20', 
+        '4507-20', '4082-08', '4083-08', 
+        '4085-08'
+      ) 
+      or se.course_id in (
+        '2458', '2474', '2470', '2470', '2472', 
+        '2478', '48835', '2333', '73248', 
+        '3583', '33080', '20207', '70385', 
+        '82724', '82533', '75500', '70080', 
+        '82373', '82807', '20000', '82720', 
+        '82540', '77780', '78880', '82378', 
+        '82808', '2838', '2007', '70080', 
+        '70082', '20080', '20088', '20000', 
+        '20708', '33080'
+      ) 
+      or c.course_name like '%75-hour MO Prelicense Course%'
+    ) 
+    and se.course_status = 'Completed' 
+    and se.completion_date_ts is not null 
+    and se.enrollment_date_ts >= dateadd(year,-4,getdate())
+)
+,add_row_number as (
+  select * 
+        ,row_number () over (partition by a.student_id, a.state_abbv, a.subsidiary_id, a.livestream_flag 
+                              order by a.completion_date) student_completion_sequence 
+  from main a
+) 
+select * 
+from add_row_number
+
+#####################################################################################################################
+
+--xxState requires students to complete 2 courses in specified order and then 1 elective course: 
+--course 1:'0000-17'
+--course 2:'0036-17'
+--course 3 elective: '0044-16', '0038-17', '0043-16', '0040-16', '0048-16', '0041-16'
+
+--Query #2 xxState
+
+;with main as(
+select 
+	s.student_id 
+	,s.first_name
+	,s.last_name 
+	,s.email_address 
+	,s.zipcode 
+	,cast(se.enrollment_date_ts as date) enrollment_date
+	,cast(se.completion_date_ts as date) completion_date
+	,scr.state_abbv 
+	,scr.license_type_id 
+	,s.subsidiary_id 
+	,sub.subsidiary_description 
+	,se.course_id 
+	,c.course_name 
+	,se.course_status 
+	,sci.approval_number 
+from svr.db.student ms 
+inner join svr.db.student_enrollment mse on s.student_id  = se.student_id 
+left join svr.db.student_credit_requested mscr on se.enrollment_id  = scr.enrollment_id 
+left join svr.db.student_certificates_issued msci on scr.credit_requested_id = sci.credit_requested_id 
+inner join svr.db.license_type l on scr.license_type_id  = l.license_type_id 
+inner join svr.db.course mc on se.course_id = c.course_id 
+inner join svr.db.course_type ct on c.course_type_id = ct.course_type_id 
+inner join svr.db.subsidiaries sub on s.subsidiary_id  = sub.subsidiary_internal_id 
+where (sci.approval_number in (
+		'0000-17', '0036-17', '0044-16', '0038-17', '0043-16', '0040-16', '0048-16', '0041-16')
+and se.course_status = 'Completed'
+and se.completion_date_ts is not null
+and se.enrollment_date_ts  >= dateadd(year,-4,getdate())
+))
+, course_one as ( 
+	select student_id, approval_number as completed_one, count(approval_number) course_count
+	from main
+	where approval_number = '0000-17'
+	group by student_id, approval_number
+)
+, course_two as (
+	select student_id, approval_number as completed_two, count(approval_number) course_count
+	from main
+	where approval_number = '0036-17'
+	group by student_id, approval_number
+)
+, course_three as ( 
+	select student_id, approval_number as completed_three, count(approval_number) course_count
+	from main
+	where approval_number in ('0044-16', '0038-17', '0043-16', '0040-16', '0048-16', '0041-16')
+	group by student_id, approval_number
+)
+, course_three_use as (  
+	select *
+	,case when course_count > 1 then 1 else course_count end as course_count_use from course_three
+)
+	select 
+		main.license_type_id 
+		,main.subsidiary_id 
+		,main.subsidiary_description 
+		,main.first_name 
+		,main.last_name 
+		,main.email_address 
+		,a.student_id 
+		,main.state_abbv 
+		,main.zipcode 
+		,a.completed_one first_required_course
+		,b.completed_two second_required_course
+		,c.completed_three third_elective_course
+		,count(a.course_count + b.course_count + c.course_count_use) completed_courses_total
+		,min(main.enrollment_date) enrollment_date
+		,max(main.completion_date) completion_date
+	from course_one a
+	inner join course_two b on a.student_id = b.student_id
+	inner join course_three_use c on a.student_id = c.student_id
+	inner join main on a.student_id = main.student_id
+	group by a.student_id, a.completed_one, b.completed_two, c.completed_three, main.state_abbv, main.license_type_id,
+	main.subsidiary_id, main.zipcode, main.first_name, main.last_name, main.email_address, main.subsidiary_description
