@@ -1,0 +1,56 @@
+--Cross University SEMO Students Analysis 
+--From 2019 through 2022, how many SLU students are also SEMO students? 
+    --How many UMSL students are also SEMO students?
+
+;with UMSL as(
+select 
+distinct s.studentID
+	  ,s.EmailAddress
+	  ,scr.StateAbbr credit state
+	  ,u.universityDescription
+from students s
+left join studentEnrollments se on se.studentID = s.studentID
+left join StudentCreditRequested scr on scr.EnrollmentID = se.EnrollmentID
+left join university u on u.universityInternalID = s.universityId
+	where se.enrollmentDate between '2019-01-01' and '2022-12-31'
+	and u.universityInternalID = '16'
+)
+, SLU as(
+select 
+distinct s.studentID
+	  ,s.EmailAddress
+	  ,scr.StateAbbr credit state
+	  ,u.universityDescription
+from students s
+left join studentEnrollments se on se.studentID = s.studentID
+left join StudentCreditRequested scr on scr.EnrollmentID = se.EnrollmentID
+left join university u on u.universityInternalID = s.universityId
+	where se.enrollmentDate between '2019-01-01' and '2022-12-31'
+	and u.universityInternalID = '7'
+)
+, SEMO as(
+select 
+distinct s.studentID
+	  ,s.EmailAddress
+	  ,scr.StateAbbr credit state
+	  ,u.universityDescription
+from students s
+left join studentEnrollments se on se.studentID = s.studentID
+left join StudentCreditRequested scr on scr.EnrollmentID = se.EnrollmentID
+left join university u on u.universityInternalID = s.universityId
+	where se.enrollmentDate between '2019-01-01' and '2022-12-31'
+	and u.universityInternalID = '16'
+)
+
+--Best match on email address 
+--StudentID is not consistent across universities
+
+select count(distinct sl.EmailAddress) cross_uniCR_count
+from SLU sl
+inner join SEMO s on s.EmailAddress = sl.EmailAddress
+  #returns 413 students matched on email address
+
+select count(distinct u.EmailAddress) cross_uniCR_count
+from UMSL u
+inner join SEMO s on s.EmailAddress = u.EmailAddress
+  #returns 2,924 students matched on email address
