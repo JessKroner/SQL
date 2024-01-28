@@ -37,7 +37,7 @@
       '82378', '82808', '70080', '70082'
     ) 
     or c.course_name like '%75-hour MO Prelicense Course%' 
-    then 0 else 0 end as livestream_flag 
+    then 1 else 0 end as livestream_flag 
   from 
     svr.db.student s 
     inner join svr.db.student_enrollment se on s.student_id = se.student_id 
